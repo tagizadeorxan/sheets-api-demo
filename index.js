@@ -1,19 +1,10 @@
 const clientId =
-  "";
+  "794310186848-uemcu7n2lqtiahu8729862haen9tcbf7.apps.googleusercontent.com"; // Вставьте ваш Client ID
 
-// const authSection = document.querySelector(".auth");
-
-// const authUrl =
-//   "https://accounts.google.com/o/oauth2/v2/auth" +
-//   "&client_id=" +
-//   creds.web.client_id +
-//   "redirect_uri=http://localhost:5500" +
-//   "response_type=token" +
-//   "scope=https://www.googleapis.com/auth/drive.metadata.readonly&";
-
-/*
- * Create form to request access token from Google's OAuth 2.0 server.
- */
+//
+// Полное описание процедуры авторизации Google Sheets API для веб-сайтов:
+// https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow
+//
 function oauthSignIn() {
   // Google's OAuth 2.0 endpoint for requesting an access token
   var oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -47,6 +38,9 @@ function oauthSignIn() {
   form.submit();
 }
 
+//
+// Проверка токена при запуске приложения
+//
 function checkToken() {
   if (!window.location.hash) {
     return null;
@@ -62,52 +56,27 @@ function checkToken() {
   }
 }
 
-document.querySelector(".auth a").addEventListener("click", (evt) => {
+//
+// Обработка клика по ссылке "Получить токен"
+//
+function authLinkClickHandler(evt) {
   evt.preventDefault();
   oauthSignIn();
-});
+}
 
+//
+// Это - токен для запросов к Google API в глобальной области видимости.
+// Используйте его при выполнении запросов.
+//
 const token = checkToken();
 
+//
+// Проверка авторизации
+//
 if (token) {
   document.querySelector(".auth").innerHTML =
     "Мы получили токен и можем выполнять запросы!";
+} else {
+  const authLink = document.querySelector(".auth a");
+  authLink.addEventListener("click", authLinkClickHandler);
 }
-
-// =================================================
-
-function createTable() {
-  const body = {
-    properties: { title: "Название документа", locale: "ru_RU" },
-    sheets: [
-      {
-        properties: {
-          sheetType: "GRID",
-          sheetId: 0,
-          title: "Название листа",
-          gridProperties: {
-            rowCount: 8,
-            columnCount: 5,
-          },
-        },
-      },
-    ],
-  };
-  return fetch("https://sheets.googleapis.com/v4/spreadsheets", {
-    method: "POST",
-    body: JSON.stringify(body),
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  });
-}
-
-const createTableButton = document.querySelector(".createTable");
-createTableButton.addEventListener("click", (evt) => {
-  evt.preventDefault();
-  createTable()
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-    });
-});
