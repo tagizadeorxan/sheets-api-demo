@@ -1,5 +1,5 @@
 const clientId =
-  "794310186848-uemcu7n2lqtiahu8729862haen9tcbf7.apps.googleusercontent.com"; // Вставьте ваш Client ID
+  ""; // Вставьте ваш Client ID
 
 //
 // Полное описание процедуры авторизации Google Sheets API для веб-сайтов:
